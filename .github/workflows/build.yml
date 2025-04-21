@@ -1,0 +1,64 @@
+name: Tag and upload
+
+on:
+  workflow_run:
+    workflows: ["Compile and test"]
+    types:
+      - success
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          java-package: jdk
+          distribution: 'adopt'
+
+      - name: Get version from pom.xml
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Build with Maven
+        id: maven_build
+        run: mvn clean package
+
+      - name: Check for non-snapshot version
+        id: check_snapshot
+        run: |
+          if [[ "${{ env.VERSION }}" == *"SNAPSHOT"* ]]; then
+            echo "This is a snapshot version. Exiting."
+            exit 1
+          fi
+
+      - name: Create Git tag for version
+        id: git_tag
+        run: |
+          TAG_NAME="${{ env.VERSION }}"
+          if git tag -l | grep -q "$TAG_NAME"; then
+            echo "Git tag '$TAG_NAME' already exists. Skipping tag creation."
+          else
+            git tag "$TAG_NAME" -m "v$TAG_NAME"
+            git push --tags
+            echo "New tag '$TAG_NAME' created and pushed."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ success() }}
+
+      - name: Upload .jar artifact
+        id: artifact_upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcMMO-v${{ env.VERSION }}.jar
+          path: ${{ github.workspace }}/target/*.jar
+        if: ${{ success() }}
