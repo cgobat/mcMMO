@@ -4,13 +4,15 @@ on:
   workflow_run:
     workflows: ["Compile and test"]
     types: [completed]
+    branches:
+      - "master"
   workflow_dispatch:
 
 jobs:
   build:
     name: Build package
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion != 'failure' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - name: Checkout code
