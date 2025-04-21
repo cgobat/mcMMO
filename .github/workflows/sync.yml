@@ -19,11 +19,10 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Add upstream remote
-        run: git remote add upstream https://github.com/mcMMO-Dev/mcMMO.git
-
-      - name: Fetch upstream changes
-        run: git fetch upstream
+      - name: Add and fetch upstream remote
+        run: |
+          git remote add upstream https://github.com/mcMMO-Dev/mcMMO.git
+          git fetch upstream master
 
       - name: Merge upstream changes
         run: |
@@ -32,5 +31,3 @@ jobs:
 
       - name: Push changes
         run: git push origin master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
