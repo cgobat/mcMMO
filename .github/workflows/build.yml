@@ -2,15 +2,15 @@ name: Tag and upload
 
 on:
   workflow_run:
-    workflows: ["Compile and test", "Maven compiler"]
-    types:
-      - success
+    workflows: ["Compile and test"]
+    types: [completed]
   workflow_dispatch:
 
 jobs:
   build:
     name: Build package
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion != 'failure' }}
 
     steps:
       - name: Checkout code
