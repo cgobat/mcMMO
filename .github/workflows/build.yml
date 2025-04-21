@@ -35,7 +35,7 @@ jobs:
       - name: Check for non-snapshot version
         id: check_snapshot
         run: |
-          if [[ "${{ env.VERSION }}" == *"SNAPSHOT"* ]]; then
+          if [[ "${{ env.VERSION }}" =~ SNAPSHOT ]]; then
             echo "This is a snapshot version. Exiting."
             exit 1
           fi
