@@ -1,0 +1,36 @@
+name: Sync upstream changes
+
+on:
+  schedule:
+    - cron: '0 7 * * *' # daily at 07:00 UTC
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Sync changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/mcMMO-Dev/mcMMO.git
+
+      - name: Fetch upstream changes
+        run: git fetch upstream
+
+      - name: Merge upstream changes
+        run: |
+          git switch master
+          git merge upstream/master -m "Merge latest changes from upstream"
+
+      - name: Push changes
+        run: git push origin master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
