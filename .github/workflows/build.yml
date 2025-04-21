@@ -2,13 +2,14 @@ name: Tag and upload
 
 on:
   workflow_run:
-    workflows: ["Compile and test"]
+    workflows: ["Compile and test", "Maven compiler"]
     types:
       - success
   workflow_dispatch:
 
 jobs:
   build:
+    name: Build package
     runs-on: ubuntu-latest
 
     steps:
