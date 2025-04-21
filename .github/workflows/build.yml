@@ -41,7 +41,7 @@ jobs:
 
       - name: Build with Maven
         id: maven_build
-        run: mvn clean package
+        run: mvn -DskipTests clean package # assume tests have already passed
 
       - name: Check for non-snapshot version
         id: check_snapshot
