@@ -27,6 +27,8 @@ jobs:
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          __git_sha=${{ github.sha }}
+          echo "GIT_SHORTSHA=${__git_sha:0:7}" >> $GITHUB_ENV
 
       - name: Cache Maven packages
         id: maven_cache
@@ -69,6 +71,6 @@ jobs:
         id: artifact_upload
         uses: actions/upload-artifact@v4
         with:
-          name: mcMMO-v${{ env.VERSION }}.jar
-          path: ${{ github.workspace }}/target/*.jar
+          name: mcMMO_v${{ env.VERSION }}.git-${{ env.GIT_SHORTSHA }}
+          path: ${{ github.workspace }}/target/mcMMO.jar
         if: ${{ success() }}
