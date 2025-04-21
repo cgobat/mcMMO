@@ -31,18 +31,6 @@ jobs:
           __git_sha=${{ github.sha }}
           echo "GIT_SHORTSHA=${__git_sha:0:7}" >> $GITHUB_ENV
 
-      - name: Cache Maven packages
-        id: maven_cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build with Maven
-        id: maven_build
-        run: mvn -DskipTests clean package # assume tests have already passed
-
       - name: Check for non-snapshot version
         id: check_snapshot
         run: |
@@ -66,7 +54,18 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ success() }}
+
+      - name: Cache Maven packages
+        id: maven_cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build with Maven
+        id: maven_build
+        run: mvn -DskipTests clean package # assume tests have already passed
 
       - name: Upload .jar artifact
         id: artifact_upload
@@ -74,4 +73,3 @@ jobs:
         with:
           name: mcMMO_v${{ env.VERSION }}.git-${{ env.GIT_SHORTSHA }}
           path: ${{ github.workspace }}/target/mcMMO.jar
-        if: ${{ success() }}
