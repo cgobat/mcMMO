@@ -46,7 +46,7 @@ jobs:
         run: |
           TAG_NAME="${{ env.VERSION }}"
           git config user.name --global "GitHub Actions"
-          git config user.email --global "nossr50@gmail.com"
+          git config user.email --global "41898282+github-actions[bot]@users.noreply.github.com"
           if git tag -l | grep -q "$TAG_NAME"; then
             echo "Git tag '$TAG_NAME' already exists. Skipping tag creation."
           else
