@@ -33,16 +33,9 @@ jobs:
           __git_sha=${{ github.sha }}
           echo "GIT_SHORTSHA=${__git_sha:0:7}" >> $GITHUB_ENV
 
-      - name: Check for non-snapshot version
-        id: check_snapshot
-        run: |
-          if [[ "${{ env.VERSION }}" =~ SNAPSHOT ]]; then
-            echo "This is a snapshot version. Exiting."
-            exit 1
-          fi
-
       - name: Create Git tag for version
         id: git_tag
+        if: ${{ ! contains(env.VERSION, 'SNAPSHOT') }}
         run: |
           TAG_NAME="${{ env.VERSION }}"
           git config user.name --global "GitHub Actions"
@@ -54,8 +47,6 @@ jobs:
             git push --tags
             echo "New tag '$TAG_NAME' created and pushed."
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache Maven packages
         id: maven_cache
