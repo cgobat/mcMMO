@@ -1,6 +1,6 @@
 package com.gmail.nossr50.config.skills.alchemy;
 
-import static com.gmail.nossr50.util.ItemUtils.setItemName;
+import static com.gmail.nossr50.util.ItemUtils.customName;
 import static com.gmail.nossr50.util.PotionUtil.matchPotionType;
 import static com.gmail.nossr50.util.PotionUtil.setBasePotionType;
 import static com.gmail.nossr50.util.PotionUtil.setUpgradedAndExtendedProperties;
@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -158,7 +161,7 @@ public class PotionConfig extends LegacyConfigLoader {
             }
         }
 
-        int totalPotions = potionsLoaded + incompatible + failures;
+        int totalPotions = potionsLoaded + failures;
 
         mcMMO.p.getLogger()
                 .info("Loaded " + potionsLoaded + " of " + totalPotions + " Alchemy potions.");
@@ -369,7 +372,9 @@ public class PotionConfig extends LegacyConfigLoader {
 
         final String configuredName = section.getString("Name", null);
         if (configuredName != null) {
-            setItemName(potionMeta, configuredName);
+            final TextComponent textComponent = Component.text(configuredName)
+                    .decoration(TextDecoration.ITALIC, false);
+            customName(potionMeta, textComponent, configuredName);
         }
     }
 

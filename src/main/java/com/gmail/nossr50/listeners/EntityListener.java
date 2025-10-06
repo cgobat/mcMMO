@@ -43,7 +43,6 @@ import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Endermite;
@@ -89,13 +88,18 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
 public class EntityListener implements Listener {
+    private static final String MULTISHOT = "multishot";
+    private static final String PIERCING = "piercing";
+    private static final String DEEPSLATE_REDSTONE_ORE = "deepslate_redstone_ore";
+    private static final Set<String> ARMOR_STAND = Set.of("ARMOR_STAND", "armor_stand");
+    private static final Set<String> MANNEQUIN = Set.of("mannequin", "MANNEQUIN");
     private final mcMMO pluginRef;
 
     /**
      * We can use this {@link NamespacedKey} for {@link Enchantment} comparisons to check if a
      * {@link Player} has a {@link Trident} enchanted with "Piercing".
      */
-    private final NamespacedKey piercingEnchantment = NamespacedKey.minecraft("piercing");
+    private final NamespacedKey piercingEnchantment = NamespacedKey.minecraft(PIERCING);
     private final static Set<EntityType> TRANSFORMABLE_ENTITIES
             = Set.of(EntityType.SLIME, EntityType.MAGMA_CUBE);
 
@@ -205,7 +209,7 @@ public class EntityListener implements Listener {
                 CombatUtils.delayArrowMetaCleanup(arrow);
 
                 // If fired from an item with multi-shot, we need to track
-                if (ItemUtils.doesPlayerHaveEnchantmentInHands(player, "multishot")) {
+                if (ItemUtils.doesPlayerHaveEnchantmentInHands(player, MULTISHOT)) {
                     arrow.setMetadata(MetadataConstants.METADATA_KEY_MULTI_SHOT_ARROW,
                             MetadataConstants.MCMMO_METADATA_VALUE);
                 }
@@ -221,7 +225,7 @@ public class EntityListener implements Listener {
                 }
 
                 //Check both hands
-                if (ItemUtils.doesPlayerHaveEnchantmentInHands(player, "piercing")) {
+                if (ItemUtils.doesPlayerHaveEnchantmentInHands(player, PIERCING)) {
                     return;
                 }
 
@@ -282,7 +286,7 @@ public class EntityListener implements Listener {
                 entity.removeMetadata(MetadataConstants.METADATA_KEY_TRAVELING_BLOCK, pluginRef);
             }
         } else if ((block.getType() == Material.REDSTONE_ORE || block.getType().getKey().getKey()
-                .equalsIgnoreCase("deepslate_redstone_ore"))) {
+                .equalsIgnoreCase(DEEPSLATE_REDSTONE_ORE))) {
             //Redstone ore fire this event and should be ignored
         } else {
             if (mcMMO.getUserBlockTracker().isIneligible(block)) {
@@ -352,11 +356,13 @@ public class EntityListener implements Listener {
             return;
         }
 
-        // Don't process this event for marked entities, for players this is handled above,
-        // However, for entities, we do not wanna cancel this event to allow plugins to observe changes
-        // properly
+        if (ExperienceConfig.getInstance().isArmorStandInteractionPrevented()
+                && isArmorStandEntity(attacker)) {
+            return;
+        }
 
-        if (event.getEntity() instanceof ArmorStand) {
+        if (ExperienceConfig.getInstance().isMannequinInteractionPrevented()
+                && isMannequinEntity(attacker)) {
             return;
         }
 
@@ -1195,5 +1201,13 @@ public class EntityListener implements Listener {
                 Crossbows.processCrossbows(event, pluginRef, arrow);
             }
         }
+    }
+
+    public static boolean isMannequinEntity(Entity attacker) {
+        return MANNEQUIN.contains(attacker.getType().toString());
+    }
+
+    public static boolean isArmorStandEntity(Entity attacker) {
+        return ARMOR_STAND.contains(attacker.getType().toString());
     }
 }
