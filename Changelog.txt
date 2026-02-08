@@ -1,13 +1,19 @@
 Version 2.2.050
-    Minimum supported Minecraft version raised to 1.20.4 (see notes)
+    Minimum supported Minecraft version raised to 1.20.5 (see notes)
     Improved Spears damage detection (see notes)
     Spear abilities can now trigger from off-hand attacks with the Spear
     Further improved compatibility with Excellent Enchants (fixed more errors)
+    Fixed Spears command showing too many decimal places in some circumstances (Thanks Momshroom)
+    (Codebase) Updated Recipe API to use alternative methods (Thanks Warriorrrr)
+    (Codebase) Removed a bunch of unused code
+    (Codebase) Refactored code around evaluating Minecraft server version
+
 
     NOTES:
-    From 2.2.050 onwards, mcMMO will require Minecraft versions 1.20.4 or newer.
+    From 2.2.050 onwards, mcMMO will require Minecraft versions 1.20.5 or newer.
     Every now and then I raise the minimum supported Minecraft version to reduce maintenance burden of supporting older versions.
     mcMMO no longer monitors PlayerAnimationEvent, it turns out Spigot has a DamageType just for Spear damage, avoiding the need to track player arm swings.
+    I changed how mcMMO detects the game version slightly, now if it fails to determine the game version it will make the assumption you are on the minimum supported version and print an error, this is just a failsafe in case the version detection mechanism ever fails.
 
 Version 2.2.049
     Combat abilities work with spear in off-hand again (see notes)
