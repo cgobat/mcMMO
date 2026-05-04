@@ -453,13 +453,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     public void onEntityDamageMonitor(EntityDamageByEntityEvent entityDamageEvent) {
-        if (entityDamageEvent.getEntity() instanceof LivingEntity livingEntity) {
-
-            if (entityDamageEvent.getFinalDamage() >= livingEntity.getHealth()) {
-                //This sets entity names back to whatever they are supposed to be
-                CombatUtils.fixNames(livingEntity);
-            }
-        }
+        CombatUtils.restoreMobNameIfLethal(entityDamageEvent);
 
         if (entityDamageEvent.getDamager() instanceof Arrow arrow) {
             CombatUtils.delayArrowMetaCleanup(arrow);
@@ -528,6 +522,23 @@ public class EntityListener implements Listener {
                 }
             }
         }
+    }
+
+    /**
+     * Monitor non-entity damage for lethal hits.
+     *
+     * EntityDamageByEntityEvent already has its own monitor path above; this fills the gap for
+     * lethal environmental damage where Slime/MagmaCube split can still inherit temporary names.
+     *
+     * @param entityDamageEvent The event to monitor
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+    public void onEntityDamageMonitor(EntityDamageEvent entityDamageEvent) {
+        if (entityDamageEvent instanceof EntityDamageByEntityEvent) {
+            return;
+        }
+
+        CombatUtils.restoreMobNameIfLethal(entityDamageEvent);
     }
 
     public boolean checkIfInPartyOrSamePlayer(Cancellable event, Player defendingPlayer,

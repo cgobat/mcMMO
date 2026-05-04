@@ -8,7 +8,6 @@ import static com.gmail.nossr50.util.Permissions.canUseSubSkill;
 import com.gmail.nossr50.config.experience.ExperienceConfig;
 import com.gmail.nossr50.datatypes.experience.XPGainReason;
 import com.gmail.nossr50.datatypes.interactions.NotificationType;
-import com.gmail.nossr50.datatypes.meta.OldName;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import com.gmail.nossr50.datatypes.skills.SubSkillType;
@@ -26,6 +25,7 @@ import com.gmail.nossr50.skills.tridents.TridentsManager;
 import com.gmail.nossr50.skills.unarmed.UnarmedManager;
 import com.gmail.nossr50.util.ItemUtils;
 import com.gmail.nossr50.util.MetadataConstants;
+import com.gmail.nossr50.util.MobHealthbarUtils;
 import com.gmail.nossr50.util.Misc;
 import com.gmail.nossr50.util.MobHealthbarUtils;
 import com.gmail.nossr50.util.Permissions;
@@ -49,9 +49,9 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Trident;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
@@ -755,23 +755,37 @@ public final class CombatUtils {
     }
 
     /**
-     * This cleans up names from displaying in chat as hearts
+     * Restores a mob's custom name from its healthbar snapshot metadata, if present.
      *
      * @param entity target entity
+     * @deprecated Use {@link com.gmail.nossr50.util.MobHealthbarUtils#restoreNameFromSnapshot}
+     *     directly.
      */
+    @Deprecated
     public static void fixNames(@NotNull LivingEntity entity) {
-        List<MetadataValue> metadataValue = entity.getMetadata(
-                MetadataConstants.METADATA_KEY_OLD_NAME_KEY);
+        MobHealthbarUtils.restoreNameFromSnapshot(entity);
+    }
 
-        if (metadataValue.size() <= 0) {
+    /**
+     * Restores mob name metadata only when a damage event is lethal and a healthbar snapshot
+     * exists on the entity.
+     *
+     * @param entityDamageEvent the damage event to evaluate
+     */
+    public static void restoreMobNameIfLethal(@NotNull EntityDamageEvent entityDamageEvent) {
+        if (!(entityDamageEvent.getEntity() instanceof LivingEntity livingEntity)) {
             return;
         }
 
-        OldName oldName = (OldName) metadataValue.get(0);
-        entity.setCustomName(oldName.asString());
-        entity.setCustomNameVisible(false);
+        if (entityDamageEvent.getFinalDamage() < livingEntity.getHealth()) {
+            return;
+        }
 
-        entity.removeMetadata(MetadataConstants.METADATA_KEY_OLD_NAME_KEY, mcMMO.p);
+        if (!MobHealthbarUtils.hasHealthbarSnapshot(livingEntity)) {
+            return;
+        }
+
+        MobHealthbarUtils.restoreNameFromSnapshot(livingEntity);
     }
 
     /**
