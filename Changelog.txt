@@ -10,6 +10,7 @@ Version 2.2.052
     Fixed bug where vanilla mobs (null custom name) had their name incorrectly restored as an empty string instead of null after healthbar display
     Fixed bug where hitting a mob multiple times during the healthbar display window caused the name to restore too early (see notes)
     Changed mcMMO behavior around immature crop drops, no longer blocking drops from immature crops (See notes)
+    Added missing default value for 'Skills.Acrobatics.GracefulRoll.DamageThreshold' to advanced.yml
     Added 'Skills.Crossbows.PoweredShot.RankDamageMultiplier' to advanced.yml
     Added 'Skills.Crossbows.PoweredShot.MaxDamage' to advanced.yml
     Added 'Skills.Maces.Crush.Base_Damage' to advanced.yml
@@ -24,6 +25,7 @@ Version 2.2.052
     (Codebase) Simplified crossbow arrow handling by eliminating unnecessary custom metadata tracking
     (Codebase) Replaced three separate healthbar metadata keys with a single HealthbarSnapshot record, eliminating duplicate restore logic spread across MobHealthDisplayUpdaterTask, CombatUtils, and TransientMetadataTools
     (Codebase) Rewrote MobHealthDisplayUpdaterTask as a self-managing repeating polling task using lastHitMs timestamps to extend the display window on re-hits, replacing the single-shot runAtEntityLater approach
+    (Codebase) Removed unused Roll.printInfo(), Roll.getMechanics(), and Roll.getStats() overrides; deprecated SubSkill interface methods getStats() and getMechanics() for removal
 
     NOTES:
     In this update I've added two new advanced.yml settings for more granular control of the enchant level cap for both Repair and Salvage, this is an alternative to flipping on ExploitFix.UnsafeEnchantments in experience.yml which simply uncaps both skills.
