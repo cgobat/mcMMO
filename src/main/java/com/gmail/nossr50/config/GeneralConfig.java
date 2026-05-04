@@ -252,7 +252,13 @@ public class GeneralConfig extends BukkitConfig {
     }
 
     public int getMobHealthbarTime() {
-        return Math.max(1, config.getInt("Mob_Healthbar.Display_Time", 3));
+        final int configured = config.getInt("Mob_Healthbar.Display_Time", 3);
+        // Negative values (previously used as an undocumented "permanent display" mode) are no
+        // longer supported. Clamp them to 20× the default (60 s) so the healthbar still clears.
+        if (configured < 0) {
+            return 60;
+        }
+        return Math.max(1, configured);
     }
 
     /* Scoreboards */

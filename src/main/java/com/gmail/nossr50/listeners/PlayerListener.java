@@ -10,7 +10,6 @@ import com.gmail.nossr50.datatypes.skills.subskills.taming.CallOfTheWildType;
 import com.gmail.nossr50.events.McMMOReplaceVanillaTreasureEvent;
 import com.gmail.nossr50.locale.LocaleLoader;
 import com.gmail.nossr50.mcMMO;
-import com.gmail.nossr50.runnables.MobHealthDisplayUpdaterTask;
 import com.gmail.nossr50.runnables.player.PlayerProfileLoadingTask;
 import com.gmail.nossr50.skills.fishing.FishingManager;
 import com.gmail.nossr50.skills.herbalism.HerbalismManager;
@@ -183,7 +182,7 @@ public class PlayerListener implements Listener {
         }
 
         // temporarily clear the mob's name
-        new MobHealthDisplayUpdaterTask(attacker).run();
+        MobHealthbarUtils.restoreNameFromSnapshot(attacker);
 
         // set the name back
         mcMMO.p.getFoliaLib().getScheduler().runAtEntityLater(attacker,

@@ -6,6 +6,9 @@ Version 2.2.052
     Fixed bug where Powered Shot (Crossbows) was reading MaxDamage from the Archery config section instead of its own
     Fixed bug where Smelting Vanilla XP multiplier was not using Skills.Smelting.VanillaXPMultiplier values from advanced.yml
     Fixed Fishing skill only working with main-hand fishing rod when fishing
+    Fixed bug where mob custom names could be permanently corrupted after healthbar display (see notes)
+    Fixed bug where vanilla mobs (null custom name) had their name incorrectly restored as an empty string instead of null after healthbar display
+    Fixed bug where hitting a mob multiple times during the healthbar display window caused the name to restore too early (see notes)
     Changed mcMMO behavior around immature crop drops, no longer blocking drops from immature crops (See notes)
     Added 'Skills.Crossbows.PoweredShot.RankDamageMultiplier' to advanced.yml
     Added 'Skills.Crossbows.PoweredShot.MaxDamage' to advanced.yml
@@ -19,6 +22,8 @@ Version 2.2.052
     (Codebase) Updated deprecated durability API usage to ItemMeta Damageable API (see notes)
     (Codebase) Removed obsolete multishot arrow metadata marker system, modernized to native Spigot/Paper APIs
     (Codebase) Simplified crossbow arrow handling by eliminating unnecessary custom metadata tracking
+    (Codebase) Replaced three separate healthbar metadata keys with a single HealthbarSnapshot record, eliminating duplicate restore logic spread across MobHealthDisplayUpdaterTask, CombatUtils, and TransientMetadataTools
+    (Codebase) Rewrote MobHealthDisplayUpdaterTask as a self-managing repeating polling task using lastHitMs timestamps to extend the display window on re-hits, replacing the single-shot runAtEntityLater approach
 
     NOTES:
     In this update I've added two new advanced.yml settings for more granular control of the enchant level cap for both Repair and Salvage, this is an alternative to flipping on ExploitFix.UnsafeEnchantments in experience.yml which simply uncaps both skills.
@@ -29,6 +34,7 @@ Version 2.2.052
     The fishing hand-context changes in this update may fix reports where off-hand fishing seemed quicker than main-hand fishing.
     Durability handling now uses ItemMeta Damageable APIs instead of deprecated ItemStack durability methods.
     This may address some custom armor durability issues, but if you can still reproduce custom armor repairing when struck by axes, please report the bug with exact reproduction steps and custom-item/plugin details.
+    The mob custom name corruption bug: if a mob was hit again before the healthbar display timer expired, the healthbar string was being saved as the "original" name, so the mob would permanently show healthbar text after the timer fired.
 
 Version 2.2.051
     Fixed bug which caused trickshot-bounced arrows to have much longer potion durations than intended (Thanks flyncodes)

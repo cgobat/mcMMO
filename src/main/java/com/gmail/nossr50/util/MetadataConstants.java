@@ -17,10 +17,9 @@ public class MetadataConstants {
             MetadataConstants.METADATA_KEY_PLAYER_BRED_MOB,
             MetadataConstants.METADATA_KEY_PLAYER_TAMED_MOB,
             MetadataConstants.METADATA_KEY_EXPLOITED_ENDERMEN,
-            MetadataConstants.METADATA_KEY_CUSTOM_NAME,
+            MetadataConstants.METADATA_KEY_HEALTHBAR_SNAPSHOT,
             MetadataConstants.METADATA_KEY_RUPTURE,
             MetadataConstants.METADATA_KEY_EXPLOSION_FROM_RUPTURE,
-            MetadataConstants.METADATA_KEY_OLD_NAME_KEY,
             MetadataConstants.METADATA_KEY_DODGE_TRACKER
     );
 
@@ -41,7 +40,8 @@ public class MetadataConstants {
     public static final @NotNull String METADATA_KEY_CUSTOM_DAMAGE = "mcMMO: Custom Damage";
     public static final @NotNull String METADATA_KEY_TRAVELING_BLOCK = "mcMMO: Traveling Block";
     public static final @NotNull String METADATA_KEY_TRACKED_TNT = "mcMMO: Tracked TNT";
-    public static final @NotNull String METADATA_KEY_NAME_VISIBILITY = "mcMMO: Name Visibility";
+    /** Single key storing a {@link com.gmail.nossr50.datatypes.meta.HealthbarSnapshot} before mcMMO applies a healthbar display. */
+    public static final @NotNull String METADATA_KEY_HEALTHBAR_SNAPSHOT = "mcmmo_healthbar_snapshot";
     public static final @NotNull String METADATA_KEY_INF_ARROW = "mcMMO: Infinite Arrow";
     public static final @NotNull String METADATA_KEY_TRACKED_ARROW = "mcMMO: Tracked Arrow";
     public static final @NotNull String METADATA_KEY_BOW_FORCE = "mcMMO: Bow Force";
@@ -62,8 +62,7 @@ public class MetadataConstants {
     public static final @NotNull String METADATA_KEY_PLAYER_TAMED_MOB = "mcmmo_player_tamed_mob";
     public static final @NotNull String METADATA_KEY_VILLAGER_TRADE_ORIGIN_ITEM = "mcmmo_villager_trade_origin_item";
     public static final @NotNull String METADATA_KEY_EXPLOITED_ENDERMEN = "mcmmo_exploited_endermen";
-    public static final @NotNull String METADATA_KEY_CUSTOM_NAME = "mcmmo_custom_name";
-    public static final @NotNull String METADATA_KEY_OLD_NAME_KEY = "mcmmo_old_name";
+
     public static final @NotNull String METADATA_KEY_RUPTURE = "mcmmo_rupture";
     public static final byte SIMPLE_FLAG_VALUE = (byte) 0x1;
     public static FixedMetadataValue MCMMO_METADATA_VALUE;
