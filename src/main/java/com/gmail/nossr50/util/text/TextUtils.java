@@ -93,12 +93,6 @@ public class TextUtils {
         return splitGroups;
     }
 
-    static void addChildWebComponent(@NotNull ComponentBuilder<?, ?> webTextComponent,
-            @NotNull String childName) {
-        TextComponent childComponent = Component.text(childName).color(NamedTextColor.BLUE);
-        webTextComponent.append(childComponent);
-    }
-
     static void addNewHoverComponentToTextComponent(@NotNull TextComponent.Builder textComponent,
             @NotNull Component baseComponent) {
         textComponent.hoverEvent(HoverEvent.showText(baseComponent));
