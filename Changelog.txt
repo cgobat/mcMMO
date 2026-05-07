@@ -1,6 +1,5 @@
 Version 2.2.052
     Skill info tooltip colors are now fully customizable via locale strings — all colors in JSON hover components are driven by locale keys and support & codes, hex colors (&#RRGGBB), and [[COLOR_NAME]] tokens
-    Removed Patreon and language translation links from the skill command URL bar
     Fixed incorrect effect durations for splash and lingering variants of Infestation, Weaving, Wind Charging, and Oozing potions in potions.yml (Thanks Warriorrrr)
     Fixed an exploit where arrows from multishot crossbows could be recovered in regions protected by WorldGuard
     Fixed an exploit where renamed seeds could trigger Green Thumb crop replanting without being consumed
@@ -12,6 +11,7 @@ Version 2.2.052
     Fixed bug where vanilla mobs (null custom name) had their name incorrectly restored as an empty string instead of null after healthbar display
     Fixed bug where hitting a mob multiple times during the healthbar display window caused the name to restore too early (see notes)
     Changed mcMMO behavior around immature crop drops, no longer blocking drops from immature crops (See notes)
+    Removed Patreon and language translation links from the skill command URL bar
     Added missing default value for 'Skills.Acrobatics.GracefulRoll.DamageThreshold' to advanced.yml
     Added 'Skills.Crossbows.PoweredShot.RankDamageMultiplier' to advanced.yml
     Added 'Skills.Crossbows.PoweredShot.MaxDamage' to advanced.yml
