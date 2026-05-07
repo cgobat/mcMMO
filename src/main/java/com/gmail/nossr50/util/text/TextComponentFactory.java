@@ -126,10 +126,8 @@ public class TextComponentFactory {
                 prefix, space,
                 getWebLinkTextComponent(McMMOWebLinks.WEBSITE), space,
                 getWebLinkTextComponent(McMMOWebLinks.DISCORD), space,
-                getWebLinkTextComponent(McMMOWebLinks.PATREON), space,
                 getWebLinkTextComponent(McMMOWebLinks.WIKI), space,
                 getWebLinkTextComponent(McMMOWebLinks.SPIGOT), space,
-                getWebLinkTextComponent(McMMOWebLinks.HELP_TRANSLATE), space,
                 suffix));
     }
 

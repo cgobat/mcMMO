@@ -1,5 +1,6 @@
 Version 2.2.052
     Skill info tooltip colors are now fully customizable via locale strings — all colors in JSON hover components are driven by locale keys and support & codes, hex colors (&#RRGGBB), and [[COLOR_NAME]] tokens
+    Removed Patreon and language translation links from the skill command URL bar
     Fixed incorrect effect durations for splash and lingering variants of Infestation, Weaving, Wind Charging, and Oozing potions in potions.yml (Thanks Warriorrrr)
     Fixed an exploit where arrows from multishot crossbows could be recovered in regions protected by WorldGuard
     Fixed an exploit where renamed seeds could trigger Green Thumb crop replanting without being consumed

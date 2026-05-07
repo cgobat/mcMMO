@@ -7,9 +7,7 @@ import net.kyori.adventure.text.TextComponent;
 public enum McMMOWebLinks {
     WEBSITE,
     DISCORD,
-    PATREON,
     SPIGOT,
-    HELP_TRANSLATE,
     WIKI;
 
     public String getUrl() {
@@ -25,8 +23,6 @@ public enum McMMOWebLinks {
         return switch (this) {
             case WEBSITE -> LocaleLoader.getString("JSON.URL.Website");
             case DISCORD -> LocaleLoader.getString("JSON.URL.Discord");
-            case PATREON -> LocaleLoader.getString("JSON.URL.Patreon");
-            case HELP_TRANSLATE -> LocaleLoader.getString("JSON.URL.Translation");
             case SPIGOT -> LocaleLoader.getString("JSON.URL.Spigot");
             case WIKI -> LocaleLoader.getString("JSON.URL.Wiki");
         };
@@ -37,8 +33,6 @@ public enum McMMOWebLinks {
         return switch (this) {
             case WEBSITE -> LocaleLoader.getTextComponent("JSON.URL.Website");
             case DISCORD -> LocaleLoader.getTextComponent("JSON.URL.Discord");
-            case PATREON -> LocaleLoader.getTextComponent("JSON.URL.Patreon");
-            case HELP_TRANSLATE -> LocaleLoader.getTextComponent("JSON.URL.Translation");
             case SPIGOT -> LocaleLoader.getTextComponent("JSON.URL.Spigot");
             case WIKI -> LocaleLoader.getTextComponent("JSON.URL.Wiki");
         };
@@ -52,9 +46,7 @@ public enum McMMOWebLinks {
         return switch (this) {
             case WEBSITE -> LocaleLoader.getTextComponent("JSON.URL.Website.Detail");
             case SPIGOT -> LocaleLoader.getTextComponent("JSON.URL.Spigot.Detail");
-            case PATREON -> LocaleLoader.getTextComponent("JSON.URL.Patreon.Detail");
             case WIKI -> LocaleLoader.getTextComponent("JSON.URL.Wiki.Detail");
-            case HELP_TRANSLATE -> LocaleLoader.getTextComponent("JSON.URL.Translation.Detail");
             case DISCORD -> null;
         };
     }
@@ -64,8 +56,6 @@ public enum McMMOWebLinks {
         return switch (this) {
             case WEBSITE -> LocaleLoader.getTextComponent("JSON.URL.Label.Website");
             case DISCORD -> LocaleLoader.getTextComponent("JSON.URL.Label.Discord");
-            case PATREON -> LocaleLoader.getTextComponent("JSON.URL.Label.Patreon");
-            case HELP_TRANSLATE -> LocaleLoader.getTextComponent("JSON.URL.Label.Translation");
             case SPIGOT -> LocaleLoader.getTextComponent("JSON.URL.Label.Spigot");
             case WIKI -> LocaleLoader.getTextComponent("JSON.URL.Label.Wiki");
         };
