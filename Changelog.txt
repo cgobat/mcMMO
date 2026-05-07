@@ -1,4 +1,5 @@
 Version 2.2.052
+    Skill info tooltip colors are now fully customizable via locale strings — all colors in JSON hover components are driven by locale keys and support & codes, hex colors (&#RRGGBB), and [[COLOR_NAME]] tokens
     Fixed incorrect effect durations for splash and lingering variants of Infestation, Weaving, Wind Charging, and Oozing potions in potions.yml (Thanks Warriorrrr)
     Fixed an exploit where arrows from multishot crossbows could be recovered in regions protected by WorldGuard
     Fixed an exploit where renamed seeds could trigger Green Thumb crop replanting without being consumed
@@ -20,12 +21,21 @@ Version 2.2.052
     Added 'Skills.Repair.ArcaneForging.MaxEnchantLevel' to advanced.yml (See notes)
     Added 'Skills.Salvage.ArcaneSalvage.MaxEnchantLevel' to advanced.yml (See notes)
     Updated Simplified Chinese (zh_CN) locale with new Spears and Maces translations, color-code spacing fixes, improved fishing messages, and corrected ability wear-off message formatting (Thanks GhostDC)
+    Added & color codes to JSON hover tooltip keys and new JSON.URL.*.Detail, JSON.URL.Header,
+    JSON.URL.Label.* keys to all 13 active non-English locale files
+    (de, es, fr, hu_HU, it, ja_JP, ko, lt_LT, pl, pt_BR, ru, zh_CN, zh_TW)
+    for consistency with locale_en_US.properties
     (Codebase) Updated deprecated durability API usage to ItemMeta Damageable API (see notes)
     (Codebase) Removed obsolete multishot arrow metadata marker system, modernized to native Spigot/Paper APIs
     (Codebase) Simplified crossbow arrow handling by eliminating unnecessary custom metadata tracking
     (Codebase) Replaced three separate healthbar metadata keys with a single HealthbarSnapshot record, eliminating duplicate restore logic spread across MobHealthDisplayUpdaterTask, CombatUtils, and TransientMetadataTools
     (Codebase) Rewrote MobHealthDisplayUpdaterTask as a self-managing repeating polling task using lastHitMs timestamps to extend the display window on re-hits, replacing the single-shot runAtEntityLater approach
     (Codebase) Removed unused Roll.printInfo(), Roll.getMechanics(), and Roll.getStats() overrides; deprecated SubSkill interface methods getStats() and getMechanics() for removal
+    (Codebase) LocaleLoader.formatComponent() now supports [[NAME]] color tokens (e.g. [[RED]], [[DARK_AQUA]], [[BOLD]]) by translating them to & codes before Adventure serialization, so all three mcMMO color formats (&X, &#RRGGBB, [[NAME]]) work in JSON hover components
+    (Codebase) Rewrote TextComponentFactory to use LocaleLoader.getTextComponent() throughout, eliminating all hard-coded NamedTextColor constants from JSON hover component construction — all colors and text are now fully configurable via locale strings
+    (Codebase) Added locale keys JSON.Type.Passive, JSON.Type.Active, JSON.Type.SuperAbility, JSON.Locked, JSON.LevelRequirement, JSON.DescriptionHeader, JSON.URL.*.Detail, JSON.URL.Header, JSON.URL.Label.* with appropriate & color codes in locale_en_US.properties
+    (Codebase) Modernized McMMOWebLinks enum with getDescriptionComponent(), getDetailComponent(), getLabelComponent() methods returning proper Adventure TextComponents
+    (Codebase) Removed dead TextUtils.addChildWebComponent() method
 
     NOTES:
     In this update I've added two new advanced.yml settings for more granular control of the enchant level cap for both Repair and Salvage, this is an alternative to flipping on ExploitFix.UnsafeEnchantments in experience.yml which simply uncaps both skills.
