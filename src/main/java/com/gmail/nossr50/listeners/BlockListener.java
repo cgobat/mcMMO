@@ -30,6 +30,7 @@ import com.gmail.nossr50.util.sounds.SoundManager;
 import com.gmail.nossr50.util.sounds.SoundType;
 import com.gmail.nossr50.worldguard.WorldGuardManager;
 import com.gmail.nossr50.worldguard.WorldGuardUtils;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -154,6 +155,28 @@ public class BlockListener implements Listener {
                                     Math.min(modifyDropEvent.getModifiedItemStackQuantity(),
                                             item.getItemStack().getMaxStackSize()));
                         }
+                    }
+                }
+            }
+
+            // Excavation treasure injection — rolls happen here so drops enter the
+            // BlockDropItemEvent item list and are visible to Telekinesis-style enchant plugins.
+            final Player excavationPlayer = event.getPlayer();
+            final McMMOPlayer excavationMmoPlayer = UserManager.getPlayer(excavationPlayer);
+            if (excavationMmoPlayer != null
+                    && BlockUtils.affectedByGigaDrillBreaker(block)
+                    && ItemUtils.isShovel(excavationPlayer.getInventory().getItemInMainHand())
+                    && mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(
+                            excavationPlayer, PrimarySkillType.EXCAVATION)
+                    && !mcMMO.getUserBlockTracker().isIneligible(block)) {
+                final List<ItemStack> treasureDrops = excavationMmoPlayer.getExcavationManager()
+                        .rollAndCollectTreasureDrops(block);
+                if (!treasureDrops.isEmpty()) {
+                    final World blockWorld = block.getWorld();
+                    final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
+                    for (final ItemStack treasureStack : treasureDrops) {
+                        final Item droppedItem = blockWorld.dropItem(dropLocation, treasureStack);
+                        event.getItems().add(droppedItem);
                     }
                 }
             }

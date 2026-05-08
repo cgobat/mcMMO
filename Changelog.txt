@@ -1,4 +1,6 @@
 Version 2.2.052
+    Fixed Minecraft version detection failing on Spigot servers — the server version string format used by Spigot (git-Spigot-...) was not matched by the version regex, causing version to resolve as 0.0.0 and Tricky Trials potions to be incorrectly skipped
+    Fixed Woodcutting bonus drops (Harvest Lumber, Clean Cuts) and Excavation treasure drops bypassing BlockDropItemEvent, making them invisible to Telekinesis-style enchant plugins
     Skill info tooltip colors are now fully customizable via locale strings — all colors in JSON hover components are driven by locale keys and support & codes, hex colors (&#RRGGBB), and [[COLOR_NAME]] tokens
     Fixed incorrect effect durations for splash and lingering variants of Infestation, Weaving, Wind Charging, and Oozing potions in potions.yml (Thanks Warriorrrr)
     Fixed an exploit where arrows from multishot crossbows could be recovered in regions protected by WorldGuard
@@ -23,8 +25,6 @@ Version 2.2.052
     Added 'Skills.Salvage.ArcaneSalvage.MaxEnchantLevel' to advanced.yml (See notes)
     Updated Simplified Chinese (zh_CN) locale with new Spears and Maces translations, color-code spacing fixes, improved fishing messages, and corrected ability wear-off message formatting (Thanks GhostDC)
     Added & color codes to JSON hover tooltip keys and new JSON.URL.*.Detail, JSON.URL.Header,
-    JSON.URL.Label.* keys to all 13 active non-English locale files
-    (de, es, fr, hu_HU, it, ja_JP, ko, lt_LT, pl, pt_BR, ru, zh_CN, zh_TW)
     for consistency with locale_en_US.properties
     (Codebase) Updated deprecated durability API usage to ItemMeta Damageable API (see notes)
     (Codebase) Removed obsolete multishot arrow metadata marker system, modernized to native Spigot/Paper APIs
