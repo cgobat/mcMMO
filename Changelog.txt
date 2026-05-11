@@ -37,6 +37,7 @@ Version 2.2.052
     (Codebase) Added locale keys JSON.Type.Passive, JSON.Type.Active, JSON.Type.SuperAbility, JSON.Locked, JSON.LevelRequirement, JSON.DescriptionHeader, JSON.URL.*.Detail, JSON.URL.Header, JSON.URL.Label.* with appropriate & color codes in locale_en_US.properties
     (Codebase) Modernized McMMOWebLinks enum with getDescriptionComponent(), getDetailComponent(), getLabelComponent() methods returning proper Adventure TextComponents
     (Codebase) Removed dead TextUtils.addChildWebComponent() method
+    (Codebase) Bumped api-version in plugin.yml from 1.13 to 1.20.5, eliminating legacy bytecode field-rename shims applied by the server at load time
 
     NOTES:
     In this update I've added two new advanced.yml settings for more granular control of the enchant level cap for both Repair and Salvage, this is an alternative to flipping on ExploitFix.UnsafeEnchantments in experience.yml which simply uncaps both skills.
