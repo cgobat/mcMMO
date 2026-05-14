@@ -70,18 +70,19 @@ class ExcavationTest extends MMOTestEnvironment {
         mmoPlayer.modifySkill(PrimarySkillType.EXCAVATION, 1000);
 
         final Block block = Mockito.mock(Block.class);
-        when(block.getType()).thenReturn(Material.SAND);
         when(block.getDrops(any())).thenReturn(null);
         when(block.getLocation()).thenReturn(new Location(world, 0, 64, 0));
 
         final ExcavationManager excavationManager = Mockito.spy(new ExcavationManager(mmoPlayer));
-        doReturn(getGuaranteedTreasureDrops()).when(excavationManager).getTreasures(block);
+        doReturn(getGuaranteedTreasureDrops()).when(excavationManager).getTreasures(Material.SAND);
 
-        // When: treasure roll happens inside BlockDropItemEvent
-        final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block);
+        // When: treasure roll happens inside BlockDropItemEvent;
+        // Material.SAND simulates what event.getBlockState().getType() returns
+        final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block,
+                Material.SAND);
 
         // Then: at least one treasure was returned for injection into the event
-        verify(excavationManager, atLeastOnce()).getTreasures(block);
+        verify(excavationManager, atLeastOnce()).getTreasures(Material.SAND);
         org.junit.jupiter.api.Assertions.assertFalse(drops.isEmpty(),
                 "Expected at least one treasure drop from a guaranteed roll");
     }
@@ -92,15 +93,15 @@ class ExcavationTest extends MMOTestEnvironment {
         mmoPlayer.modifySkill(PrimarySkillType.EXCAVATION, 1000);
 
         final Block block = Mockito.mock(Block.class);
-        when(block.getType()).thenReturn(Material.SAND);
         when(block.getDrops(any())).thenReturn(null);
         when(block.getLocation()).thenReturn(new Location(world, 0, 64, 0));
 
         final ExcavationManager excavationManager = Mockito.spy(new ExcavationManager(mmoPlayer));
-        doReturn(getImpossibleTreasureDrops()).when(excavationManager).getTreasures(block);
+        doReturn(getImpossibleTreasureDrops()).when(excavationManager).getTreasures(Material.SAND);
 
         // When
-        final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block);
+        final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block,
+                Material.SAND);
 
         // Then: no treasure was returned
         org.junit.jupiter.api.Assertions.assertTrue(drops.isEmpty(),
@@ -131,15 +132,16 @@ class ExcavationTest extends MMOTestEnvironment {
             mmoPlayer.modifySkill(PrimarySkillType.EXCAVATION, 1000);
 
             final Block block = Mockito.mock(Block.class);
-            when(block.getType()).thenReturn(Material.SAND);
             when(block.getLocation()).thenReturn(new Location(world, 1, 64, 1));
 
             final ExcavationManager excavationManager = Mockito.spy(
                     new ExcavationManager(mmoPlayer));
-            doReturn(getGuaranteedTreasureDrops()).when(excavationManager).getTreasures(block);
+            doReturn(getGuaranteedTreasureDrops()).when(excavationManager)
+                    .getTreasures(Material.SAND);
 
-            // When: treasure roll happens inside BlockDropItemEvent
-            final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block);
+            // When: treasure roll happens with the pre-break material threaded from the listener
+            final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block,
+                    Material.SAND);
 
             // Then: at least one treasure was returned for injection into the event,
             // not spawned directly via world.dropItem()
@@ -155,15 +157,16 @@ class ExcavationTest extends MMOTestEnvironment {
             mmoPlayer.modifySkill(PrimarySkillType.EXCAVATION, 1000);
 
             final Block block = Mockito.mock(Block.class);
-            when(block.getType()).thenReturn(Material.SAND);
             when(block.getLocation()).thenReturn(new Location(world, 2, 64, 2));
 
             final ExcavationManager excavationManager = Mockito.spy(
                     new ExcavationManager(mmoPlayer));
-            doReturn(getImpossibleTreasureDrops()).when(excavationManager).getTreasures(block);
+            doReturn(getImpossibleTreasureDrops()).when(excavationManager)
+                    .getTreasures(Material.SAND);
 
             // When
-            final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block);
+            final List<ItemStack> drops = excavationManager.rollAndCollectTreasureDrops(block,
+                    Material.SAND);
 
             // Then: empty list — impossible treasure never triggers
             org.junit.jupiter.api.Assertions.assertTrue(drops.isEmpty(),

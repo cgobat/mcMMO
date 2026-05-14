@@ -22,6 +22,7 @@ import com.gmail.nossr50.util.skills.SkillUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
@@ -54,12 +55,17 @@ public class ExcavationManager extends SkillManager {
     @Deprecated(forRemoval = true, since = "2.2.024")
     public List<ExcavationTreasure> getTreasures(@NotNull BlockState blockState) {
         requireNonNull(blockState, "blockState cannot be null");
-        return getTreasures(blockState.getBlock());
+        return getTreasures(blockState.getType());
     }
 
     public List<ExcavationTreasure> getTreasures(@NotNull Block block) {
         requireNonNull(block, "block cannot be null");
-        return Excavation.getTreasures(block);
+        return getTreasures(block.getType());
+    }
+
+    public List<ExcavationTreasure> getTreasures(@NotNull Material material) {
+        requireNonNull(material, "material cannot be null");
+        return Excavation.getTreasures(material);
     }
 
     @VisibleForTesting
@@ -70,30 +76,47 @@ public class ExcavationManager extends SkillManager {
     }
 
     /**
-     * Rolls for excavation treasures, spawns XP orbs, and applies treasure XP for each
-     * successful roll. Returns the list of {@link ItemStack}s to inject into
-     * {@link org.bukkit.event.block.BlockDropItemEvent} so that Telekinesis-style enchant
-     * plugins can intercept them through the standard Bukkit event pipeline.
+     * Rolls for excavation treasures. This is the primary production entry point, called from
+     * {@link org.bukkit.event.block.BlockDropItemEvent}.
      *
-     * <p>When {@link SuperAbilityType#GIGA_DRILL_BREAKER} is active the roll count is tripled,
-     * preserving the legacy behaviour where {@link #excavationBlockCheck} was called three
-     * times for the centre block (once normally and twice inside {@link #gigaDrillBreaker}).
+     * <p>{@code block.getType()} is AIR by event time because the block has already been removed
+     * from the world. Pass {@code material} from {@code event.getBlockState().getType()} (the
+     * pre-break snapshot) so treasure lookup uses the correct material.
      *
-     * @param block the block that was broken
+     * @param block    the broken block — used only for spawn location
+     * @param material the material of the block before it was broken
      * @return list of treasure {@link ItemStack}s from all successful rolls
      */
+    public @NotNull List<ItemStack> rollAndCollectTreasureDrops(
+            @NotNull Block block, @NotNull Material material) {
+        requireNonNull(block, "block cannot be null");
+        requireNonNull(material, "material cannot be null");
+        return doRollAndCollectTreasureDrops(material, Misc.getBlockCenter(block));
+    }
+
+    /**
+     * @deprecated Use {@link #rollAndCollectTreasureDrops(Block, Material)} instead. When called
+     *     during {@link org.bukkit.event.block.BlockDropItemEvent}, {@code block.getType()}
+     *     returns AIR, causing treasure lookup to fail silently.
+     */
+    @Deprecated(forRemoval = true, since = "2.2.053")
     public @NotNull List<ItemStack> rollAndCollectTreasureDrops(@NotNull Block block) {
+        requireNonNull(block, "block cannot be null");
+        return doRollAndCollectTreasureDrops(block.getType(), Misc.getBlockCenter(block));
+    }
+
+    private @NotNull List<ItemStack> doRollAndCollectTreasureDrops(
+            @NotNull Material material, @NotNull Location centerOfBlock) {
         if (!Permissions.isSubSkillEnabled(getPlayer(), SubSkillType.EXCAVATION_ARCHAEOLOGY)) {
             return List.of();
         }
 
-        final List<ExcavationTreasure> treasures = getTreasures(block);
+        final List<ExcavationTreasure> treasures = getTreasures(material);
         if (treasures.isEmpty()) {
             return List.of();
         }
 
         final int skillLevel = getSkillLevel();
-        final Location centerOfBlock = Misc.getBlockCenter(block);
 
         // GDB called excavationBlockCheck 3 times (1 regular + 2 via gigaDrillBreaker),
         // giving 3 independent treasure rolls for the centre block. Mirror that here.
