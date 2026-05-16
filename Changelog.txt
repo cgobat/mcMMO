@@ -1,4 +1,8 @@
+Version 2.2.053
+    (Codebase) Removed 27 dead JSON.* locale keys from all locale files — JSON.Rank, JSON.JWrapper.Header, JSON.JWrapper.Target.{Type,Block,Player}, JSON.Hover.{SuperAbility,Mystery2}, JSON.Notification.SuperAbility, JSON.Acrobatics.Roll.Interaction.Activated, and all JSON.<SkillName> skill-name keys were never loaded in Java source; skill names use <Skill>.SkillName instead
+
 Version 2.2.052
+    Fixed Mooshroom Shake drops not loading due to wrong entity ID in fishing_treasures.yml (see notes)
     Fixed Minecraft version detection failing on Spigot servers, causing Tricky Trials potions to be skipped
     Fixed Woodcutting bonus drops (Harvest Lumber, Clean Cuts) and Excavation treasure drops bypassing BlockDropItemEvent, making them invisible to Telekinesis-style enchant plugins (See notes)
     Skill info tooltip colors are now fully customizable via locale strings — all colors in JSON hover components are driven by locale keys and support & codes, hex colors (&#RRGGBB), and [[COLOR_NAME]] tokens
@@ -26,8 +30,7 @@ Version 2.2.052
     Added 'Skills.Repair.ArcaneForging.MaxEnchantLevel' to advanced.yml (See notes)
     Added 'Skills.Salvage.ArcaneSalvage.MaxEnchantLevel' to advanced.yml (See notes)
     Updated Simplified Chinese (zh_CN) locale with new Spears and Maces translations, color-code spacing fixes, improved fishing messages, and corrected ability wear-off message formatting (Thanks GhostDC)
-    Added & color codes to JSON hover tooltip keys and new JSON.URL.*.Detail, JSON.URL.Header,
-    for consistency with locale_en_US.properties
+    Added & color codes to JSON hover tooltip keys and new JSON.URL.*.Detail, JSON.URL.Header, for consistency with locale_en_US.properties
     (Codebase) Updated deprecated durability API usage to ItemMeta Damageable API (see notes)
     (Codebase) Removed obsolete multishot arrow metadata marker system, modernized to native Spigot/Paper APIs
     (Codebase) Simplified crossbow arrow handling by eliminating unnecessary custom metadata tracking
@@ -42,6 +45,7 @@ Version 2.2.052
     (Codebase) Bumped api-version in plugin.yml from 1.13 to 1.20.5, eliminating legacy bytecode field-rename shims applied by the server at load time
 
     NOTES:
+    The Mooshroom Shake fix is auto-migrated at startup (Shake.MUSHROOM_COW → Shake.MOOSHROOM in fishing_treasures.yml).
     Regarding the telekenisis plugin compatibility fix, Tree Feller is not yet fixed, I will try to address it in the near future.
     In this update I've added two new advanced.yml settings for more granular control of the enchant level cap for both Repair and Salvage, this is an alternative to flipping on ExploitFix.UnsafeEnchantments in experience.yml which simply uncaps both skills.
     If ExploitFix.UnsafeEnchantments happens to be enabled in experience.yml, it will override both of these new settings and therefor allow basically uncapped enchant levels for Arcane Forging and Arcane Salvage.
