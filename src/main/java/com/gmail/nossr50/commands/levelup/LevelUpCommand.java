@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import com.gmail.nossr50.mcMMO;
+import com.gmail.nossr50.placeholders.PapiPlaceholders;
 import com.gmail.nossr50.util.LogUtils;
 import com.gmail.nossr50.util.skills.SkillTools;
 import java.util.EnumMap;
@@ -28,6 +29,9 @@ import org.jetbrains.annotations.VisibleForTesting;
  * milestones only), {@code {@power_level}} (the matched milestone for power level triggers,
  * otherwise the player's current power level), and {@code {@<skill>_level}} (current level of
  * any non-child skill, e.g. {@code {@mining_level}}).
+ * <p>
+ * When PlaceholderAPI is installed, its placeholders are also resolved against the player who
+ * leveled up before the command runs.
  */
 public final class LevelUpCommand implements LevelUpAction {
 
@@ -83,8 +87,9 @@ public final class LevelUpCommand implements LevelUpAction {
     void executeCommands(@NotNull McMMOPlayer mmoPlayer, @Nullable PrimarySkillType skill,
             @Nullable Integer matchedLevel, @Nullable Integer matchedPowerLevel) {
         for (String command : commands) {
-            final String injected = injectPlaceholders(command, mmoPlayer, skill, matchedLevel,
-                    matchedPowerLevel);
+            final String injected = PapiPlaceholders.replace(mmoPlayer.getPlayer(),
+                    injectPlaceholders(command, mmoPlayer, skill, matchedLevel,
+                            matchedPowerLevel));
             LogUtils.debug(mcMMO.p.getLogger(), "Executing level up command: " + injected);
             dispatch(mmoPlayer.getPlayer(), injected);
         }
@@ -108,7 +113,7 @@ public final class LevelUpCommand implements LevelUpAction {
         replaceAll(builder, "{@player}", mmoPlayer.getPlayer().getName());
 
         if (skill != null) {
-            replaceAll(builder, "{@skill}", skill.getName());
+            replaceAll(builder, "{@skill}", mcMMO.p.getSkillTools().getLocalizedSkillName(skill));
         }
         if (matchedLevel != null) {
             replaceAll(builder, "{@level}", String.valueOf(matchedLevel));
