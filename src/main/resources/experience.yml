@@ -308,6 +308,7 @@ Experience_Values:
         Acacia_Log: 90
         Dark_Oak_Log: 90
         Pale_Oak_Log: 130
+        Poplar_Log: 95
         Stripped_Oak_Log: 70
         Stripped_Cherry_Log: 105
         Stripped_Spruce_Log: 80
@@ -316,6 +317,7 @@ Experience_Values:
         Stripped_Acacia_Log: 90
         Stripped_Dark_Oak_Log: 90
         Stripped_Pale_Oak_Log: 130
+        Stripped_Poplar_Log: 95
         Stripped_Oak_Wood: 70
         Stripped_Cherry_Wood: 70
         Stripped_Spruce_Wood: 80
@@ -324,6 +326,7 @@ Experience_Values:
         Stripped_Acacia_Wood: 90
         Stripped_Dark_Oak_Wood: 90
         Stripped_Pale_Oak_Wood: 90
+        Stripped_Poplar_Wood: 85
         Stripped_Mangrove_Log: 110
         Stripped_Crimson_Stem: 50
         Stripped_Warped_Stem: 50
@@ -335,6 +338,7 @@ Experience_Values:
         Acacia_Wood: 70
         Dark_Oak_Wood: 70
         Pale_Oak_Wood: 110
+        Poplar_Wood: 85
         Mangrove_Wood: 80
         Mangrove_Log: 95
         Mangrove_Roots: 10
@@ -342,6 +346,8 @@ Experience_Values:
         Brown_Mushroom_Block: 70
         Mushroom_Stem: 80
     Herbalism:
+        Red_Shrub: 11
+        Shelf_Mushroom: 50
         Bush: 11
         Cactus_Flower: 60
         Firefly_Bush: 15
@@ -460,8 +466,8 @@ Experience_Values:
         Sculk_Shrieker: 12
         Reinforced_Deepslate: 500
         Tuff: 10
-        Copper_Ore: 1400
-        Deepslate_Copper_Ore: 1900
+        Copper_Ore: 500
+        Deepslate_Copper_Ore: 750
         Deepslate: 30
         Cobbled_Deepslate: 15
         Calcite: 400
@@ -595,17 +601,17 @@ Experience_Values:
         String: 1.8
         Other: 1.5
     Smelting:
-        Copper_Nugget: 85
-        Raw_Copper: 75
+        Copper_Nugget: 15
+        Raw_Copper: 15
         Deepslate_Redstone_Ore: 30
-        Deepslate_Copper_Ore: 100
+        Deepslate_Copper_Ore: 25
         Deepslate_Coal_Ore: 20
         Deepslate_Diamond_Ore: 140
         Deepslate_Emerald_Ore: 110
         Deepslate_Iron_Ore: 40
         Deepslate_Gold_Ore: 50
         Deepslate_Lapis_Lazuli_Ore: 60
-        Copper_Ore: 75
+        Copper_Ore: 15
         Ancient_Debris: 200
         Coal_Ore: 10
         Diamond_Ore: 75

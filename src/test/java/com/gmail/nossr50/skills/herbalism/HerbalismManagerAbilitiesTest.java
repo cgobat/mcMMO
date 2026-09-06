@@ -3,6 +3,7 @@ package com.gmail.nossr50.skills.herbalism;
 import static java.util.logging.Logger.getLogger;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Ageable;
@@ -86,6 +88,18 @@ class HerbalismManagerAbilitiesTest extends MMOTestEnvironment {
         when(ageable.getAge()).thenReturn(age);
         when(ageable.getMaximumAge()).thenReturn(maximumAge);
         return ageable;
+    }
+
+    /**
+     * Shelf mushroom has no Material constant on the API this build compiles against, so the
+     * Material is mocked and only its namespaced key is meaningful. Age 0 is the small variant
+     * and age 1 the large one, whether it generated that way or was bone mealed (large shelf
+     * mushrooms also generate naturally).
+     */
+    private Ageable mockShelfMushroom(int age) {
+        final Material shelfMushroom = mock(Material.class);
+        when(shelfMushroom.getKey()).thenReturn(NamespacedKey.minecraft("shelf_mushroom"));
+        return mockAgeable(shelfMushroom, age, 1);
     }
 
     @Nested
@@ -303,6 +317,22 @@ class HerbalismManagerAbilitiesTest extends MMOTestEnvironment {
                     .isFalse();
             assertThat(herbalismManager.isBizarreAgeable(mock(BlockData.class))).isFalse();
         }
+
+        /**
+         * A shelf mushroom never grows on its own. Its age only records whether someone bone
+         * mealed it from small to large, so neither size says anything about how it got there.
+         */
+        @Test
+        void shelfMushroomShouldBeBizarreAtEitherSize() {
+            // Given - a small and a large shelf mushroom
+            final Ageable smallShelfMushroom = mockShelfMushroom(0);
+            final Ageable largeShelfMushroom = mockShelfMushroom(1);
+
+            // When - each is checked against the untrusted ageable rule
+            // Then - neither age can gate Herbalism rewards
+            assertThat(herbalismManager.isBizarreAgeable(smallShelfMushroom)).isTrue();
+            assertThat(herbalismManager.isBizarreAgeable(largeShelfMushroom)).isTrue();
+        }
     }
 
     @Nested
@@ -426,6 +456,49 @@ class HerbalismManagerAbilitiesTest extends MMOTestEnvironment {
                         org.mockito.ArgumentMatchers.anyBoolean()));
                 blockUtils.verify(() -> BlockUtils.checkDoubleDrops(any(), any(Block.class),
                         any()), never());
+            }
+        }
+
+        /**
+         * A naturally generated small shelf mushroom is a legitimate harvest even though its age
+         * is 0, so the double drop roll has to be honoured for it.
+         */
+        @Test
+        void naturalShelfMushroomsShouldRollForBonusDrops() {
+            try (MockedStatic<BlockUtils> blockUtils = mockStatic(BlockUtils.class);
+                    MockedStatic<ProbabilityUtil> ignored = mockStatic(ProbabilityUtil.class)) {
+                // Given - a natural small shelf mushroom whose double drop roll wins
+                final Ageable smallShelfMushroom = mockShelfMushroom(0);
+                when(plantState.getBlockData()).thenReturn(smallShelfMushroom);
+                blockUtils.when(() -> BlockUtils.checkDoubleDrops(mmoPlayer, plant,
+                        SubSkillType.HERBALISM_DOUBLE_DROPS)).thenReturn(true);
+
+                // When - the broken plants are checked
+                herbalismManager.checkDoubleDropsOnBrokenPlants(player, List.of(plant));
+
+                // Then - the shelf mushroom is marked for bonus drops
+                blockUtils.verify(() -> BlockUtils.markDropsAsBonus(plant, false));
+            }
+        }
+
+        /**
+         * Bone mealing a placed shelf mushroom to its large size must not turn it into a bonus
+         * drop farm the way a regrown crop legitimately does.
+         */
+        @Test
+        void playerPlacedShelfMushroomsShouldNeverMark() {
+            try (MockedStatic<BlockUtils> blockUtils = mockStatic(BlockUtils.class)) {
+                // Given - a player-placed shelf mushroom bone mealed to its largest age
+                when(chunkManager.isIneligible(plant)).thenReturn(true);
+                final Ageable largeShelfMushroom = mockShelfMushroom(1);
+                when(plantState.getBlockData()).thenReturn(largeShelfMushroom);
+
+                // When - the broken plants are checked
+                herbalismManager.checkDoubleDropsOnBrokenPlants(player, List.of(plant));
+
+                // Then - no bonus drops are marked
+                blockUtils.verify(() -> BlockUtils.markDropsAsBonus(eq(plant), anyBoolean()),
+                        never());
             }
         }
 

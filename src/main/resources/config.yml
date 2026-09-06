@@ -513,6 +513,8 @@ Green_Thumb_Replanting_Crops:
 ###
 Bonus_Drops:
     Herbalism:
+        Red_Shrub: true
+        Shelf_Mushroom: true
         Bush: true
         Cactus_Flower: true
         Firefly_Bush: true
@@ -667,8 +669,10 @@ Bonus_Drops:
         Cherry_Log: true
         Dark_Oak_Wood: true
         Pale_Oak_Wood: true
+        Poplar_Wood: true
         Dark_Oak_Log: true
         Pale_Oak_Log: true
+        Poplar_Log: true
         Oak_Wood: true
         Oak_Log: true
         Jungle_Wood: true

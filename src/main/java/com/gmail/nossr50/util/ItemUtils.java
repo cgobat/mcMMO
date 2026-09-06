@@ -761,17 +761,17 @@ public final class ItemUtils {
      */
     public static boolean isWoodcuttingDrop(ItemStack item) {
         return switch (item.getType().toString()) {
-            case "ACACIA_LOG", "BIRCH_LOG", "DARK_OAK_LOG", "PALE_OAK_LOG", "JUNGLE_LOG", "OAK_LOG",
-                 "SPRUCE_LOG", "MANGROVE_LOG", "CHERRY_LOG",
+            case "ACACIA_LOG", "BIRCH_LOG", "DARK_OAK_LOG", "PALE_OAK_LOG", "POPLAR_LOG",
+                 "JUNGLE_LOG", "OAK_LOG", "SPRUCE_LOG", "MANGROVE_LOG", "CHERRY_LOG",
                  "STRIPPED_ACACIA_LOG", "STRIPPED_BIRCH_LOG", "STRIPPED_DARK_OAK_LOG",
-                 "STRIPPED_PALE_OAK_LOG",
-                 "STRIPPED_JUNGLE_LOG", "STRIPPED_OAK_LOG", "STRIPPED_SPRUCE_LOG",
-                 "STRIPPED_MANGROVE_LOG", "STRIPPED_CHERRY_LOG",
-                 "ACACIA_SAPLING", "SPRUCE_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING",
-                 "PALE_OAK_SAPLING",
-                 "JUNGLE_SAPLING", "OAK_SAPLING", "ACACIA_LEAVES", "BIRCH_LEAVES",
-                 "DARK_OAK_LEAVES", "PALE_OAK_LEAVES",
-                 "JUNGLE_LEAVES", "OAK_LEAVES", "SPRUCE_LEAVES", "BEE_NEST", "APPLE" -> true;
+                 "STRIPPED_PALE_OAK_LOG", "STRIPPED_POPLAR_LOG", "STRIPPED_JUNGLE_LOG",
+                 "STRIPPED_OAK_LOG", "STRIPPED_SPRUCE_LOG", "STRIPPED_MANGROVE_LOG",
+                 "STRIPPED_CHERRY_LOG", "ACACIA_SAPLING", "SPRUCE_SAPLING", "BIRCH_SAPLING",
+                 "DARK_OAK_SAPLING", "PALE_OAK_SAPLING", "POPLAR_SAPLING", "JUNGLE_SAPLING",
+                 "OAK_SAPLING", "ACACIA_LEAVES", "BIRCH_LEAVES", "DARK_OAK_LEAVES",
+                 "PALE_OAK_LEAVES", "RED_POPLAR_LEAVES", "ORANGE_POPLAR_LEAVES",
+                 "YELLOW_POPLAR_LEAVES", "JUNGLE_LEAVES", "OAK_LEAVES", "SPRUCE_LEAVES",
+                 "BEE_NEST", "APPLE" -> true;
             default -> false;
         };
     }

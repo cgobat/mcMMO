@@ -99,12 +99,13 @@ public class SalvageConfig extends BukkitConfig {
             }
 
             // Salvage Material Type
-            // Prefer the current MaterialType key, falling back to the legacy
-            // ItemMaterialCategory key so existing admin configs keep working.
+            // The default file has used ItemMaterialCategory since 2019, so that is the
+            // primary key. MaterialType is the older name and still loads as a fallback.
             MaterialType salvageMaterialType = MaterialType.OTHER;
-            final String materialTypeKey = config.contains("Salvageables." + key + ".MaterialType")
-                    ? "Salvageables." + key + ".MaterialType"
-                    : "Salvageables." + key + ".ItemMaterialCategory";
+            final String materialTypeKey =
+                    config.contains("Salvageables." + key + ".ItemMaterialCategory")
+                            ? "Salvageables." + key + ".ItemMaterialCategory"
+                            : "Salvageables." + key + ".MaterialType";
             final String salvageMaterialTypeString = config.getString(materialTypeKey, "OTHER");
 
             if (!config.contains(materialTypeKey)) {

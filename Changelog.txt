@@ -1,6 +1,9 @@
 Version 2.3.001
+    Added compatibility for new blocks and items from Minecraft 26.3 to mcMMO
+    Added poplar doors, trapdoors, fences, fence gates, buttons, pressure plates, signs, hanging signs, shelves, and straw beds to the ability/tool blacklists
+    Added poplar leaves and shelf mushrooms to the blocks Tree Feller clears as part of a tree
+    Changed Super Breaker to treat concrete, concrete stairs, and concrete slabs like other pickaxe-target blocks
     Improved performance of locale message color formatting and skill name matching (Thanks wling-art)
-    Fixed Tridents and Maces Limit Break not applying for players without op (See notes)
     Fixed endermen flagged by the 'ExploitFix.EndermanEndermiteFarms' countermeasure giving full combat XP (See notes)
     Fixed Graceful Roll using the normal Roll damage threshold instead of its own (See notes)
     Fixed a rare error when multiple players logged in at the same time after a server restart (Thanks Warriorrrr)
@@ -11,25 +14,35 @@ Version 2.3.001
     Fixed the ExperienceAPI methods setXPOffline, setLevelOffline, and removeXPOffline never saving their changes
     Fixed leftover banked XP being lost when a plugin cancelled a level up event
     Fixed rare errors and stale text in messages fetched while /mcreloadlocale was running
-    Added 'Experience_Formula.Player_Tamed.Multiplier' to experience.yml (See notes)
-    Renamed 'ItemMaterialCategory' to 'MaterialType' in the default repair.vanilla.yml (See notes)
+    Added the missing 'Experience_Formula.Player_Tamed.Multiplier' entry to the default experience.yml (See notes)
+    Added Woodcutting XP values for Poplar_Log, Stripped_Poplar_Log, Poplar_Wood, and Stripped_Poplar_Wood to experience.yml
+    Added Herbalism XP values for Red_Shrub and Shelf_Mushroom to experience.yml
+    Added Bonus_Drops.Woodcutting.Poplar_Log and Bonus_Drops.Woodcutting.Poplar_Wood to config.yml
+    Added Bonus_Drops.Herbalism.Red_Shrub and Bonus_Drops.Herbalism.Shelf_Mushroom to config.yml
+    Lowered the default copper XP values for Mining and Smelting in experience.yml (See notes)
+    Changed the default potion names in potions.yml from 'Potion Of' to 'Potion of' to match vanilla (Thanks rasmus123d) (See notes)
     Removed the unused 'Skills.Swords.SerratedStrikes.BleedTicks' and 'Skills.Swords.Rupture.Explosion_Damage' settings from advanced.yml (See notes)
     Removed the unused 'Skills.Mining.BlastMining.DebrisReduction' and 'Skills.Mining.BlastMining.DropMultiplier' settings from advanced.yml (See notes)
     Removed the unused 'Options.Chunklets' and 'Options.ConversionRate' settings from hidden.yml
     Removed the unused firework and Flux entries under 'Particles' in config.yml (See notes)
     Removed the inert Tree Feller Rank_2 through Rank_5 entries and the unused Fishing Mastery block from skillranks.yml (See notes)
     Removed the unused DEFLECT_ARROWS, ABILITY_ACTIVATED_BERSERK, and TIRED entries from sounds.yml
+    Updated Simplified Chinese (zh_CN) locale with translations for the new /xprate, level-up sound, and Scrap Collector messages, plus revised existing entries (Thanks TAHAamaBOT)
     Removed the unused 'Fishing.Exhausting' locale entry
     (API) Deprecated the unused Blast Mining getDebrisReduction, getDropMultiplier, and getBlastMiningRankLevel methods in AdvancedConfig and MiningManager
+    (API) Fixed Permissions.tridentsLimitBreak and Permissions.macesLimitBreak checking the wrong permission nodes
     (Codebase) Removed the AdvancedConfig getSerratedStrikesTicks and getRuptureExplosionDamage methods along with their settings
     (Codebase) Removed the TIRED, ABILITY_ACTIVATED_BERSERK, and DEFLECT_ARROWS constants from the SoundType enum
 
     NOTES:
-    Limit Break for Tridents and Maces was checking permission nodes that were never registered, so in practice only ops had them. The checks now use 'mcmmo.ability.tridents.tridentslimitbreak' and 'mcmmo.ability.maces.maceslimitbreak', which are granted by default like the other Limit Break nodes.
+    experience.yml and config.yml auto-update on startup, so the new Woodcutting and Herbalism XP values and Bonus_Drops entries are added to existing configs automatically.
+    Copper was giving more XP than rarer ores like Iron, these values were set when copper first came out and never got looked at again. For Mining Copper_Ore is now 500 (was 1400) and Deepslate_Copper_Ore is now 750 (was 1900). For Smelting Raw_Copper and Copper_Ore are now 15 (was 75), Deepslate_Copper_Ore is now 25 (was 100), and Copper_Nugget is now 15 (was 85).
+    You will have to adjust experience.yml to get the balance changes, or delete it to generate a new one.
+    The potion rename is cosmetic and only applies to a freshly generated potions.yml, existing files keep the old names unless you edit them. Brewing still works either way since recipes are matched by effect and not by name.
     Endermen marked by the 'ExploitFix.EndermanEndermiteFarms' countermeasure are meant to give no combat XP, this protection works again. Servers that want enderman and endermite farms to give XP can turn the setting off in experience.yml.
     Graceful Roll now negates up to 14 damage as set by 'Skills.Acrobatics.GracefulRoll.DamageThreshold' in advanced.yml, it previously used the normal Roll threshold of 7.
-    The default repair.vanilla.yml labeled the material field 'ItemMaterialCategory' while mcMMO reads 'MaterialType', so the value was ignored and guessed from the item instead. Both names load now and the default file uses 'MaterialType', custom repair and salvage configs do not need updating. The material type only decides which per-material repair or salvage permission applies, and the guess was only wrong for SHIELD (now WOOD) and WARPED_FUNGUS_ON_A_STICK (now STRING).
-    Combat XP from mobs tamed by a player is multiplied by 'Experience_Formula.Player_Tamed.Multiplier'. It defaults to 0.0, which matches the old behavior of tamed mobs giving no XP.
+    The default repair.vanilla.yml labeled the material field 'ItemMaterialCategory' while mcMMO was looking for 'MaterialType' instead, so the value was ignored and guessed from the item instead. mcMMO now reads 'ItemMaterialCategory' and falls back to 'MaterialType' if it isn't there, if neither is set the type is still guessed from the item like before. Custom repair and salvage configs do not need updating. The material type only decides which per-material repair or salvage permission applies, and the guess was only wrong for SHIELD (now WOOD) and WARPED_FUNGUS_ON_A_STICK (now STRING).
+    The Player_Tamed multiplier has existed since 2.1.148 but was never written to the default experience.yml, so nobody could see it. Combat XP from mobs tamed by a player is multiplied by this value, it defaults to 0.0 which is what mcMMO has been using all along, so tamed mobs still give no XP unless you change it.
     The settings removed from config.yml, advanced.yml, hidden.yml, skillranks.yml, and sounds.yml had no effect, gameplay is unchanged. Existing config files do not need updating, leftover entries are ignored. Blast Mining bonus drops and debris have not used the removed settings for a long time, and Tree Feller has a single rank, the extra rank entries did nothing. The removed Particles entries are Ability_Activation, Ability_Deactivation, LargeFireworks, Flux, LevelUp_Enabled, and LevelUp_Tier, none of which triggered anything, the working particle toggles are untouched.
 
 Version 2.3.000

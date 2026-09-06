@@ -382,6 +382,21 @@ public final class BlockUtils {
     }
 
     /**
+     * Check if a non-wood tree part drops its loot on every Tree Feller instead of rolling for
+     * it the way leaves do.
+     *
+     * @param block the block to check
+     * @return true if Tree Feller must always spawn this block's drops, false otherwise
+     */
+    public static boolean isTreeFellerGuaranteedDrop(@NotNull Block block) {
+        return isTreeFellerGuaranteedDrop(block.getType());
+    }
+
+    public static boolean isTreeFellerGuaranteedDrop(@NotNull Material material) {
+        return mcMMO.getMaterialMapStore().isTreeFellerGuaranteedDrop(material);
+    }
+
+    /**
      * Determine if a given block can activate Herbalism abilities
      *
      * @param blockState The {@link BlockState} of the block to check

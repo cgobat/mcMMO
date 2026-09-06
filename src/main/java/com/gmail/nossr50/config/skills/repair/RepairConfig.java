@@ -74,12 +74,13 @@ public class RepairConfig extends BukkitConfig {
             }
 
             // Repair Material Type
-            // Prefer the current MaterialType key, falling back to the legacy
-            // ItemMaterialCategory key so existing admin configs keep working.
+            // The default file has used ItemMaterialCategory since 2019, so that is the
+            // primary key. MaterialType is the older name and still loads as a fallback.
             MaterialType repairMaterialType = MaterialType.OTHER;
-            final String materialTypeKey = config.contains("Repairables." + key + ".MaterialType")
-                    ? "Repairables." + key + ".MaterialType"
-                    : "Repairables." + key + ".ItemMaterialCategory";
+            final String materialTypeKey =
+                    config.contains("Repairables." + key + ".ItemMaterialCategory")
+                            ? "Repairables." + key + ".ItemMaterialCategory"
+                            : "Repairables." + key + ".MaterialType";
             final String repairMaterialTypeString = config.getString(materialTypeKey, "OTHER");
 
             if (!config.contains(materialTypeKey)) {

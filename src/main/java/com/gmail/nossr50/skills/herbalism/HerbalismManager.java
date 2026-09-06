@@ -72,6 +72,7 @@ public class HerbalismManager extends SkillManager {
     private static final String KELP_PLANT_ID = "kelp_plant";
     private static final String CHORUS_PLANT_ID = "chorus_plant";
     private static final String SWEET_BERRY_BUSH_ID = "sweet_berry_bush";
+    private static final String SHELF_MUSHROOM_ID = "shelf_mushroom";
 
     static {
         plantBreakLimits = new HashMap<>();
@@ -459,10 +460,13 @@ public class HerbalismManager extends SkillManager {
      */
     public boolean isBizarreAgeable(BlockData blockData) {
         if (blockData instanceof Ageable) {
+            final Material material = blockData.getMaterial();
             // Cactus and Sugar Canes cannot be trusted
-            return switch (blockData.getMaterial()) {
+            return switch (material) {
                 case CACTUS, KELP, SUGAR_CANE, BAMBOO -> true;
-                default -> false;
+                // Shelf mushrooms never grow on their own; age only records size, natural or
+                // bone mealed, so it cannot tell a natural block from a placed one
+                default -> SHELF_MUSHROOM_ID.equals(material.getKey().getKey());
             };
         }
 

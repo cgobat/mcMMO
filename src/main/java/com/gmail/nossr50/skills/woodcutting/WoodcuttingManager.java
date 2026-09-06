@@ -380,8 +380,10 @@ public class WoodcuttingManager extends SkillManager {
                 //Bonus Drops / Harvest lumber checks
                 processBonusDropCheck(block);
             } else if (BlockUtils.isNonWoodPartOfTree(block)) {
-                // 75% of the time do not drop leaf blocks
-                if (ThreadLocalRandom.current().nextInt(100) > 75) {
+                // Leaves only drop 25% of the time, but guaranteed-drop parts such as shelf
+                // mushrooms always drop since vanilla pops them when their log breaks
+                if (BlockUtils.isTreeFellerGuaranteedDrop(block)
+                        || ThreadLocalRandom.current().nextInt(100) > 75) {
                     spawnItemsFromCollection(player,
                             getBlockCenter(block),
                             block.getDrops(itemStack),

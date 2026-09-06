@@ -12,10 +12,13 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.mockStatic;
 
 import com.gmail.nossr50.MMOTestEnvironment;
+import com.gmail.nossr50.api.FakeBlockBreakEventType;
+import com.gmail.nossr50.api.ItemSpawnReason;
 import com.gmail.nossr50.api.exceptions.InvalidSkillException;
 import com.gmail.nossr50.config.experience.ExperienceConfig;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
@@ -25,6 +28,7 @@ import com.gmail.nossr50.datatypes.skills.SuperAbilityType;
 import com.gmail.nossr50.mcMMO;
 import com.gmail.nossr50.util.BlockUtils;
 import com.gmail.nossr50.util.EventUtils;
+import com.gmail.nossr50.util.ItemUtils;
 import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.Misc;
 import com.gmail.nossr50.util.random.ProbabilityUtil;
@@ -554,16 +558,61 @@ class WoodcuttingTest extends MMOTestEnvironment {
                 mockedMisc.verify(() -> Misc.spawnExperienceOrb(any(), anyInt()), never());
             }
         }
+    }
 
-        private void invokeDropTreeFellerLootFromBlocks(final Set<Block> blocks) {
-            try {
-                final Method method = WoodcuttingManager.class.getDeclaredMethod(
-                        "dropTreeFellerLootFromBlocks", Set.class);
-                method.setAccessible(true);
-                method.invoke(woodcuttingManager, blocks);
-            } catch (Exception exception) {
-                throw new RuntimeException(exception);
+    @Nested
+    class TreeFellerGuaranteedDrops {
+        // Shelf mushrooms are non-wood tree parts, so they land in the same else-if branch as
+        // leaves, where drops only spawn on a 25% roll. Vanilla pops a shelf mushroom whenever
+        // its log breaks, so Tree Feller has to spawn its drops on every fell instead.
+
+        @Test
+        void guaranteedDropBlockShouldSpawnDropsOnEveryFell() {
+            // Given - a non-wood tree part that is registered as a guaranteed drop
+            final Block shelfMushroom = mock(Block.class, "shelfMushroom");
+            final List<ItemStack> drops = List.of(mock(ItemStack.class));
+            Mockito.when(shelfMushroom.getDrops(itemInMainHand)).thenReturn(drops);
+            // MMOTestEnvironment stubs Misc.getBlockCenter to this location for any block
+            final Location blockCenter = new Location(world, 0, 0, 0);
+
+            // Given - Knock on Wood is locked, so the sapling fallback cannot spawn anything
+            Mockito.when(RankUtils.hasUnlockedSubskill(player,
+                    SubSkillType.WOODCUTTING_KNOCK_ON_WOOD)).thenReturn(false);
+
+            try (MockedStatic<BlockUtils> mockedBlockUtils = mockStatic(BlockUtils.class);
+                    MockedStatic<EventUtils> localMockedEventUtils = mockStatic(EventUtils.class);
+                    MockedStatic<ItemUtils> mockedItemUtils = mockStatic(ItemUtils.class)) {
+
+                mockedBlockUtils.when(() -> BlockUtils.hasWoodcuttingXP(shelfMushroom))
+                        .thenReturn(false);
+                mockedBlockUtils.when(() -> BlockUtils.isNonWoodPartOfTree(shelfMushroom))
+                        .thenReturn(true);
+                mockedBlockUtils.when(() -> BlockUtils.isTreeFellerGuaranteedDrop(shelfMushroom))
+                        .thenReturn(true);
+                localMockedEventUtils.when(() -> EventUtils.simulateBlockBreak(shelfMushroom,
+                        player, FakeBlockBreakEventType.TREE_FELLER)).thenReturn(true);
+
+                // When - the block is felled 25 times, enough that a 25% roll would drop some
+                for (int fell = 0; fell < 25; fell++) {
+                    invokeDropTreeFellerLootFromBlocks(Set.of(shelfMushroom));
+                }
+
+                // Then - every single fell spawned the drops
+                mockedItemUtils.verify(() -> ItemUtils.spawnItemsFromCollection(player,
+                        blockCenter, drops, ItemSpawnReason.TREE_FELLER_DISPLACED_BLOCK),
+                        times(25));
             }
+        }
+    }
+
+    private void invokeDropTreeFellerLootFromBlocks(final Set<Block> blocks) {
+        try {
+            final Method method = WoodcuttingManager.class.getDeclaredMethod(
+                    "dropTreeFellerLootFromBlocks", Set.class);
+            method.setAccessible(true);
+            method.invoke(woodcuttingManager, blocks);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
         }
     }
 

@@ -17,6 +17,7 @@ public class MaterialMapStore {
     private final @NotNull HashSet<String> toolBlackList;
     private final @NotNull HashSet<String> mossyWhiteList;
     private final @NotNull HashSet<String> treeFellerDestructibleWhiteList;
+    private final @NotNull HashSet<String> treeFellerGuaranteedDropWhiteList;
     private final @NotNull HashSet<String> herbalismAbilityWhiteList;
     private final @NotNull HashSet<String> blockCrackerWhiteList;
     private final @NotNull HashSet<String> canMakeShroomyWhiteList;
@@ -68,6 +69,7 @@ public class MaterialMapStore {
         toolBlackList = new HashSet<>();
         mossyWhiteList = new HashSet<>();
         treeFellerDestructibleWhiteList = new HashSet<>();
+        treeFellerGuaranteedDropWhiteList = new HashSet<>();
         herbalismAbilityWhiteList = new HashSet<>();
         blockCrackerWhiteList = new HashSet<>();
         canMakeShroomyWhiteList = new HashSet<>();
@@ -123,6 +125,7 @@ public class MaterialMapStore {
         fillToolBlackList();
         fillMossyWhiteList();
         fillTreeFellerDestructibleWhiteList();
+        fillTreeFellerGuaranteedDropWhiteList();
         fillHerbalismAbilityBlackList();
         fillBlockCrackerWhiteList();
         fillShroomyWhiteList();
@@ -160,7 +163,19 @@ public class MaterialMapStore {
     }
 
     public boolean isTreeFellerDestructible(@NotNull Material material) {
-        return treeFellerDestructibleWhiteList.contains(material.getKey().getKey());
+        return isTreeFellerDestructible(material.getKey().getKey());
+    }
+
+    public boolean isTreeFellerDestructible(@NotNull String id) {
+        return treeFellerDestructibleWhiteList.contains(id);
+    }
+
+    public boolean isTreeFellerGuaranteedDrop(@NotNull Material material) {
+        return isTreeFellerGuaranteedDrop(material.getKey().getKey());
+    }
+
+    public boolean isTreeFellerGuaranteedDrop(@NotNull String id) {
+        return treeFellerGuaranteedDropWhiteList.contains(id);
     }
 
     public boolean isHerbalismAbilityWhiteListed(@NotNull Material material) {
@@ -471,6 +486,73 @@ public class MaterialMapStore {
         intendedToolPickAxe.add("chiseled_sulfur");
         intendedToolPickAxe.add("potent_sulfur");
         intendedToolPickAxe.add("sulfur_spike");
+
+        //26.3 concrete stairs and slabs, plus concrete itself for world gen that places it
+        intendedToolPickAxe.add("white_concrete");
+        intendedToolPickAxe.add("orange_concrete");
+        intendedToolPickAxe.add("magenta_concrete");
+        intendedToolPickAxe.add("light_blue_concrete");
+        intendedToolPickAxe.add("yellow_concrete");
+        intendedToolPickAxe.add("lime_concrete");
+        intendedToolPickAxe.add("pink_concrete");
+        intendedToolPickAxe.add("gray_concrete");
+        intendedToolPickAxe.add("light_gray_concrete");
+        intendedToolPickAxe.add("cyan_concrete");
+        intendedToolPickAxe.add("purple_concrete");
+        intendedToolPickAxe.add("blue_concrete");
+        intendedToolPickAxe.add("brown_concrete");
+        intendedToolPickAxe.add("green_concrete");
+        intendedToolPickAxe.add("red_concrete");
+        intendedToolPickAxe.add("black_concrete");
+        intendedToolPickAxe.add("white_concrete_stairs");
+        intendedToolPickAxe.add("orange_concrete_stairs");
+        intendedToolPickAxe.add("magenta_concrete_stairs");
+        intendedToolPickAxe.add("light_blue_concrete_stairs");
+        intendedToolPickAxe.add("yellow_concrete_stairs");
+        intendedToolPickAxe.add("lime_concrete_stairs");
+        intendedToolPickAxe.add("pink_concrete_stairs");
+        intendedToolPickAxe.add("gray_concrete_stairs");
+        intendedToolPickAxe.add("light_gray_concrete_stairs");
+        intendedToolPickAxe.add("cyan_concrete_stairs");
+        intendedToolPickAxe.add("purple_concrete_stairs");
+        intendedToolPickAxe.add("blue_concrete_stairs");
+        intendedToolPickAxe.add("brown_concrete_stairs");
+        intendedToolPickAxe.add("green_concrete_stairs");
+        intendedToolPickAxe.add("red_concrete_stairs");
+        intendedToolPickAxe.add("black_concrete_stairs");
+        intendedToolPickAxe.add("white_concrete_slab");
+        intendedToolPickAxe.add("orange_concrete_slab");
+        intendedToolPickAxe.add("magenta_concrete_slab");
+        intendedToolPickAxe.add("light_blue_concrete_slab");
+        intendedToolPickAxe.add("yellow_concrete_slab");
+        intendedToolPickAxe.add("lime_concrete_slab");
+        intendedToolPickAxe.add("pink_concrete_slab");
+        intendedToolPickAxe.add("gray_concrete_slab");
+        intendedToolPickAxe.add("light_gray_concrete_slab");
+        intendedToolPickAxe.add("cyan_concrete_slab");
+        intendedToolPickAxe.add("purple_concrete_slab");
+        intendedToolPickAxe.add("blue_concrete_slab");
+        intendedToolPickAxe.add("brown_concrete_slab");
+        intendedToolPickAxe.add("green_concrete_slab");
+        intendedToolPickAxe.add("red_concrete_slab");
+        intendedToolPickAxe.add("black_concrete_slab");
+        //be: double slab form of the concrete slabs
+        intendedToolPickAxe.add("white_concrete_double_slab");
+        intendedToolPickAxe.add("orange_concrete_double_slab");
+        intendedToolPickAxe.add("magenta_concrete_double_slab");
+        intendedToolPickAxe.add("light_blue_concrete_double_slab");
+        intendedToolPickAxe.add("yellow_concrete_double_slab");
+        intendedToolPickAxe.add("lime_concrete_double_slab");
+        intendedToolPickAxe.add("pink_concrete_double_slab");
+        intendedToolPickAxe.add("gray_concrete_double_slab");
+        intendedToolPickAxe.add("light_gray_concrete_double_slab");
+        intendedToolPickAxe.add("cyan_concrete_double_slab");
+        intendedToolPickAxe.add("purple_concrete_double_slab");
+        intendedToolPickAxe.add("blue_concrete_double_slab");
+        intendedToolPickAxe.add("brown_concrete_double_slab");
+        intendedToolPickAxe.add("green_concrete_double_slab");
+        intendedToolPickAxe.add("red_concrete_double_slab");
+        intendedToolPickAxe.add("black_concrete_double_slab");
     }
 
     private void fillArmors() {
@@ -1145,6 +1227,9 @@ public class MaterialMapStore {
         treeFellerDestructibleWhiteList.add("birch_leaves");
         treeFellerDestructibleWhiteList.add("dark_oak_leaves");
         treeFellerDestructibleWhiteList.add("pale_oak_leaves");
+        treeFellerDestructibleWhiteList.add("red_poplar_leaves");
+        treeFellerDestructibleWhiteList.add("orange_poplar_leaves");
+        treeFellerDestructibleWhiteList.add("yellow_poplar_leaves");
         treeFellerDestructibleWhiteList.add("jungle_leaves");
         treeFellerDestructibleWhiteList.add("spruce_leaves");
         treeFellerDestructibleWhiteList.add("azalea_leaves");
@@ -1155,6 +1240,15 @@ public class MaterialMapStore {
         treeFellerDestructibleWhiteList.add("warped_wart_block");
         treeFellerDestructibleWhiteList.add("brown_mushroom_block");
         treeFellerDestructibleWhiteList.add("red_mushroom_block");
+        treeFellerDestructibleWhiteList.add("shelf_mushroom");
+    }
+
+    /**
+     * Non-wood tree parts that Tree Feller drops every time instead of putting them on the leaf
+     * roll, because vanilla pops them the moment the log they grow on breaks.
+     */
+    private void fillTreeFellerGuaranteedDropWhiteList() {
+        treeFellerGuaranteedDropWhiteList.add("shelf_mushroom");
     }
 
     private void fillMossyWhiteList() {
@@ -1193,6 +1287,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_button");
         blackList.add("cherry_button");
         blackList.add("pale_oak_button");
+        blackList.add("poplar_button");
         blackList.add("bamboo_button");
         blackList.add("crimson_button");
         blackList.add("warped_button");
@@ -1212,6 +1307,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_trapdoor");
         blackList.add("cherry_trapdoor");
         blackList.add("pale_oak_trapdoor");
+        blackList.add("poplar_trapdoor");
         blackList.add("bamboo_trapdoor");
         blackList.add("crimson_trapdoor");
         blackList.add("warped_trapdoor");
@@ -1241,6 +1337,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_fence_gate");
         blackList.add("cherry_fence_gate");
         blackList.add("pale_oak_fence_gate");
+        blackList.add("poplar_fence_gate");
         blackList.add("bamboo_fence_gate");
         blackList.add("crimson_fence_gate");
         blackList.add("warped_fence_gate");
@@ -1263,6 +1360,7 @@ public class MaterialMapStore {
         blackList.add("red_bed");
         blackList.add("white_bed");
         blackList.add("yellow_bed");
+        blackList.add("straw_bed");
     }
 
     private void addPressurePlatesToBlackList(Set<String> blackList) {
@@ -1275,6 +1373,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_pressure_plate");
         blackList.add("cherry_pressure_plate");
         blackList.add("pale_oak_pressure_plate");
+        blackList.add("poplar_pressure_plate");
         blackList.add("bamboo_pressure_plate");
         blackList.add("crimson_pressure_plate");
         blackList.add("warped_pressure_plate");
@@ -1305,6 +1404,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_shelf");
         blackList.add("cherry_shelf");
         blackList.add("pale_oak_shelf");
+        blackList.add("poplar_shelf");
         blackList.add("bamboo_shelf");
         blackList.add("crimson_shelf");
         blackList.add("warped_shelf");
@@ -1329,6 +1429,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_door");
         blackList.add("cherry_door");
         blackList.add("pale_oak_door");
+        blackList.add("poplar_door");
         blackList.add("bamboo_door");
         blackList.add("crimson_door");
         blackList.add("warped_door");
@@ -1356,6 +1457,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_fence");
         blackList.add("cherry_fence");
         blackList.add("pale_oak_fence");
+        blackList.add("poplar_fence");
         blackList.add("bamboo_fence");
         blackList.add("crimson_fence");
         blackList.add("warped_fence");
@@ -1378,6 +1480,8 @@ public class MaterialMapStore {
         blackList.add("mangrove_sign");
         blackList.add("cherry_sign");
         blackList.add("pale_oak_sign");
+        blackList.add("poplar_sign");
+        blackList.add("poplar_standing_sign"); //be
         blackList.add("bamboo_sign");
         blackList.add("crimson_sign");
         blackList.add("warped_sign");
@@ -1394,6 +1498,7 @@ public class MaterialMapStore {
         blackList.add("mangrove_hanging_sign");
         blackList.add("cherry_hanging_sign");
         blackList.add("pale_oak_hanging_sign");
+        blackList.add("poplar_hanging_sign");
         blackList.add("bamboo_hanging_sign");
         blackList.add("crimson_hanging_sign");
         blackList.add("warped_hanging_sign");
@@ -1511,6 +1616,11 @@ public class MaterialMapStore {
         toolBlackList.add("stripped_pale_oak_log");
         toolBlackList.add("pale_oak_wood");
         toolBlackList.add("stripped_pale_oak_wood");
+
+        toolBlackList.add("poplar_log");
+        toolBlackList.add("stripped_poplar_log");
+        toolBlackList.add("poplar_wood");
+        toolBlackList.add("stripped_poplar_wood");
 
         toolBlackList.add("spruce_log");
         toolBlackList.add("stripped_spruce_log");
